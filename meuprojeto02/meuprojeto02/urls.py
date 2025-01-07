@@ -24,17 +24,17 @@ urlpatterns = [
    #rota, view responsavel nome de referencia
     path('', views.inicial,name='inicial'),
     path('sobre',views.sobre,name='sobre'),
-    path('cadastro_adm', views.cadastro_adm,name='cadastro_adm'),
-    path('cadastro_aluno',views.cadastro_aluno,name='cadastro_aluno'),
-    path('cadastro_professor',views.cadastro_professor,name='cadastro_professor'),
-    path('cadastro_turma',views.cadastro_turma,name='cadastro_turma'),
-    path('editar_notas',views.editar_notas,name='editar_notas'),
+    path('cadastro_adm/', views.cadastro_adm,name='cadastro_adm'),
+    path('cadastro_aluno/',views.cadastro_aluno,name='cadastro_aluno'),
+    path('cadastro_professor/',views.cadastro_professor,name='cadastro_professor'),
+    path('cadastro_turma/',views.cadastro_turma,name='cadastro_turma'),
+    path('editar_notas/',views.editar_notas,name='editar_notas'),
     #path('inicial/',views.inicial,name='inicial'),
-    path('lista_alunos',views.lista_alunos,name='lista_alunos'),
-    path('login',views.login,name='login'),
-    path('turma_select',views.turma_select,name='turma_select'),
+    path('lista_alunos/',views.lista_alunos,name='lista_alunos'),
+    path('login/',views.login,name='login'),
+    path('turma_select/',views.turma_select,name='turma_select'),
     path('usuario_list/',views.usuario_list,name='usuario_list'),
-    path('usuario_update',views.usuario_update,name='usuario_update')
+    path('usuario_update/',views.usuario_update,name='usuario_update')
 
 ]
 # if settings.DEBUG:

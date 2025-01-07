@@ -12,18 +12,18 @@
             <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <li><a href="{{ url_for('inicial') }}">Início</a></li>
-                    <li><a href="../usuario_list.html">Tabela de Usuários</a></li>
+                    <li><a href="/inicial">Início</a></li>
+                    <li><a href="/usuario_list">Tabela de Usuários</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
-                            <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
-                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
-                            <li><a href="{{ url_for('turma_cadastro_bp.mostrar_formulario') }}">Cadastro de Turmas</a></li>
+                            <li><a href="/cadastro_adm">Cadastro de Administradores</a></li>
+                            <li><a href="/cadastro_aluno">Cadastro de Alunos</a></li>
+                            <li><a href="/cadastro_professor">Cadastro de Professores</a></li>
+                            <li><a href="/cadastro_turma">Cadastro de Turmas</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url_for('turma_bp.selecionar_turma') }}">Turmas</a></li>
+                    <li><a href="/turma_select">Turmas</a></li>
                     <li><a href="#">Caixa de entrada</a></li>
                     <li><a href="#">Configurações</a></li>
                 </ul>
@@ -67,9 +67,9 @@
                                 <td>{{ aluno.media if aluno.media is not none else '-' }}</td>
                                 <td>
                                     {% if aluno.idnota %}
-                                        <a href="{{ url_for('notas_bp.editar_notas', idnota=aluno.idnota) }}" class="btn-editar">Editar</a>
+                                        <a href="/notas/editar/{{ aluno.idnota }}" class="btn-editar">Editar</a>
                                     {% else %}
-                                        <a href="{{ url_for('notas_bp.criar_notas', idaluno=aluno.idaluno) }}" class="btn-adicionar">Adicionar Notas</a>
+                                        <a href="/notas/criar/{{ aluno.idaluno }}" class="btn-adicionar">Adicionar Notas</a>
                                     {% endif %}
                                 </td>
                             </tr>

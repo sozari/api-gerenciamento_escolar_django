@@ -43,18 +43,18 @@
             <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <li><a href="{{ url_for('inicial') }}">Início</a></li>
-                    <li><a href="{{ url_for('usuario_list_bp.listar_usuarios_html') }}">Tabela de Usuários</a></li>
+                    <li><a href="/inicial">Início</a></li>
+                    <li><a href="/usuario_list">Tabela de Usuários</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
-                            <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
-                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
-                            <li><a href="{{ url_for('turma_cadastro_bp.mostrar_formulario') }}">Cadastro de Turmas</a></li>
+                            <li><a href="/adm_cadastro">Cadastro de Administradores</a></li>
+                            <li><a href="/aluno_cadastro">Cadastro de Alunos</a></li>
+                            <li><a href="/professor_cadastro">Cadastro de Professores</a></li>
+                            <li><a href="/turma_cadastro">Cadastro de Turmas</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url_for('turma_bp.selecionar_turma') }}">Turmas</a></li>
+                    <li><a href="/turma_selecionar">Turmas</a></li>
                     <li><a href="#">Caixa de entrada</a></li>
                     <li><a href="#">Configurações</a></li>
                 </ul>

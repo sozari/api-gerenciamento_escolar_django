@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="../static/css/style_lista.css">
     <title>Painel de Usuários</title>
     <script>
-        // Função para buscar os dados da API e preencher a tabela
         async function carregarUsuarios() {
             try {
                 const resposta = await fetch('/usuario_list'); 
@@ -36,7 +35,7 @@
         }
 
         function editarUsuario(idusuario, tipo_usuario) {
-            window.location.href = `/usuario_update.html?idusuario=${idusuario}&tipo_usuario=${tipo_usuario}`;
+            window.location.href = `/usuario_update/${idusuario}?tipo_usuario=${tipo_usuario}`;
         }
 
         async function deletarUsuario(idusuario, tipo_usuario) {
@@ -65,17 +64,17 @@
             <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <a href="{{ url_for('inicial') }}">Inicio</a>
+                    <li><a href="/inicial">Inicio</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
-                            <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
-                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
-                            <li><a href="{{ url_for('turma_cadastro_bp.mostrar_formulario') }}">Cadastro de Turmas</a></li>
+                            <li><a href="/cadastro_adm">Cadastro de Administradores</a></li>
+                            <li><a href="/cadastro_aluno">Cadastro de Alunos</a></li>
+                            <li><a href="/cadastro_professor">Cadastro de Professores</a></li>
+                            <li><a href="/cadastro_turma">Cadastro de Turmas</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url_for('turma_bp.selecionar_turma') }}">Turmas</a></li>
+                    <li><a href="/turma_select">Turmas</a></li>
                     <li><a href="#">Caixa de entrada</a></li>
                     <li><a href="#">Configurações</a></li>
                 </ul>
@@ -96,8 +95,6 @@
                 </thead>
                 <tbody></tbody>
             </table>
-
-            
         </div>
     </div>
 </body>
