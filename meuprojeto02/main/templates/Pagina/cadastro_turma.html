@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cadastro de Turmas</title>
+    <link rel="stylesheet" href="../static/css/style_formulario.css">
+    <script>
+        async function handleFormSubmit(event) {
+            event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+
+            const form = document.getElementById('cadastro-form');
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    showSuccessMessage();
+                    form.reset(); // Limpa o formulário após sucesso
+                } else {
+                    alert("Erro ao cadastrar turma. Tente novamente.");
+                }
+            } catch (error) {
+                console.error("Erro ao processar o formulário:", error);
+                alert("Erro ao cadastrar turma. Tente novamente.");
+            }
+        }
+
+        function showSuccessMessage() {
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000); // A mensagem de sucesso será escondida após 5 segundos
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h1 class="logo">CLASSIFY</h1>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{ url_for('inicial') }}">Início</a></li>
+                    <li><a href="{{ url_for('usuario_list_bp.listar_usuarios_html') }}">Tabela de Usuários</a></li>
+                    <li>
+                        <a href="#" class="submenu-toggle">Cadastros</a>
+                        <ul class="submenu">
+                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
+                            <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
+                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ url_for('turma_bp.selecionar_turma') }}">Turmas</a></li>
+                    <li><a href="#">Caixa de entrada</a></li>
+                    <li><a href="#">Configurações</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <h2>Cadastro de Turmas</h2>
+
+            <!-- Mensagem de sucesso -->
+            <div id="success-message" style="display: none; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                Turma cadastrada com sucesso!
+            </div>
+
+            <!-- Formulário de cadastro -->
+            <form id="cadastro-form" action="{{ url_for('turma_cadastro_bp.submit_formulario') }}" method="POST" class="form">
+                <div class="form-group">
+                    <label for="nome_turma">Nome da Turma</label>
+                    <input type="text" id="nome_turma" name="nome_turma" placeholder="Digite o nome da turma" required>
+                </div>
+                <div class="form-group">
+                    <label for="idprofessor">Escolha o Professor</label>
+                    <select id="idprofessor" name="idprofessor" required>
+                        {% for professor in professores %}
+                            <option value="{{ professor[0] }}">{{ professor[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Cadastrar Turma</button>
+            </form>            
+        </div>
+    </div>
+</body>
+</html>
