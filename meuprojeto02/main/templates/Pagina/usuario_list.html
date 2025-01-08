@@ -3,32 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/style_lista.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style_lista.css' %}">
+    
     <title>Painel de Usuários</title>
     <script>
         async function carregarUsuarios() {
             try {
-                const resposta = await fetch('/usuario_list'); 
+                // Fazendo a requisição AJAX para a rota que pode retornar JSON ou HTML
+                const resposta = await fetch('/usuario_list', { method: 'GET' });
+
                 if (!resposta.ok) throw new Error('Erro ao carregar os usuários');
-                const usuarios = await resposta.json(); 
+                
+                // Verificando se a resposta é JSON (caso da requisição AJAX)
+                const usuarios = await resposta.json();
 
-                const tabela = document.querySelector('tbody');
-                tabela.innerHTML = ''; 
+                // Verificando se a resposta foi JSON (se for, é o caso do AJAX)
+                if (usuarios.length > 0) {
+                    const tabela = document.querySelector('tbody');
+                    tabela.innerHTML = ''; // Limpar a tabela antes de adicionar novos dados
 
-                usuarios.forEach(usuario => {
-                    const linha = document.createElement('tr');
-                    linha.innerHTML = `
-                        <td>${usuario.idusuario}</td>
-                        <td>${usuario.nome}</td>
-                        <td>${usuario.email}</td>
-                        <td>${usuario.tipo_usuario}</td>
-                        <td>
-                            <button class="btn" onclick="editarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Editar</button>
-                            <button class="btn btn-delete" onclick="deletarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Excluir</button>
-                        </td>
-                    `;
-                    tabela.appendChild(linha); 
-                });
+                    // Preencher a tabela com os usuários recebidos
+                    usuarios.forEach(usuario => {
+                        const linha = document.createElement('tr');
+                        linha.innerHTML = `
+                            <td>${usuario.idusuario}</td>
+                            <td>${usuario.nome}</td>
+                            <td>${usuario.email}</td>
+                            <td>${usuario.tipo_usuario}</td>
+                            <td>
+                                <button class="btn" onclick="editarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Editar</button>
+                                <button class="btn btn-delete" onclick="deletarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Excluir</button>
+                            </td>
+                        `;
+                        tabela.appendChild(linha);
+                    });
+                } else {
+                    console.error('Não há usuários para mostrar');
+                }
+
             } catch (erro) {
                 console.error('Erro ao carregar os usuários:', erro);
             } 
@@ -48,14 +61,14 @@
                 });
                 if (!response.ok) throw new Error('Erro ao excluir o usuário');
                 alert('Usuário excluído com sucesso!');
-                carregarUsuarios(); 
+                carregarUsuarios(); // Recarregar a lista de usuários após a exclusão
             } catch (erro) {
                 console.error('Erro ao excluir o usuário:', erro);
                 alert('Erro ao excluir o usuário. Verifique o console para mais detalhes.');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', carregarUsuarios);
+        document.addEventListener('DOMContentLoaded', carregarUsuarios); // Carrega os usuários assim que o DOM estiver pronto
     </script>
 </head>
 <body>
@@ -64,7 +77,7 @@
             <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <li><a href="/inicial">Inicio</a></li>
+                    <li><a href="/inicial">Início</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
@@ -93,7 +106,9 @@
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    <!-- Usuários serão carregados aqui via AJAX -->
+                </tbody>
             </table>
         </div>
     </div>

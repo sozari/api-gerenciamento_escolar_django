@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <title>Cadastro de Turmas</title>
-    <link rel="stylesheet" href="../static/css/style_formulario.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style_formulario.css' %}">
     <script>
         async function handleFormSubmit(event) {
             event.preventDefault(); // Impede o comportamento padrão de envio do formulário
@@ -20,7 +21,8 @@
                     showSuccessMessage();
                     form.reset(); // Limpa o formulário após sucesso
                 } else {
-                    alert("Erro ao cadastrar turma. Tente novamente.");
+                    const errorData = await response.json();
+                    alert(errorData.mensagem || "Erro ao cadastrar turma. Tente novamente.");
                 }
             } catch (error) {
                 console.error("Erro ao processar o formulário:", error);
@@ -44,19 +46,19 @@
             <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <li><a href="{{ url_for('inicial') }}">Início</a></li>
-                    <li><a href="{{ url_for('usuario_list_bp.listar_usuarios_html') }}">Tabela de Usuários</a></li>
+                    <li><a href="/inicial/">Início</a></li>
+                    <li><a href="/usuarios/listar/">Tabela de Usuários</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
-                            <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
-                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
+                            <li><a href="/administradores/cadastrar/">Cadastro de Administradores</a></li>
+                            <li><a href="/alunos/cadastrar/">Cadastro de Alunos</a></li>
+                            <li><a href="/professores/cadastrar/">Cadastro de Professores</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ url_for('turma_bp.selecionar_turma') }}">Turmas</a></li>
-                    <li><a href="#">Caixa de entrada</a></li>
-                    <li><a href="#">Configurações</a></li>
+                    <li><a href="/turmas/">Turmas</a></li>
+                    <li><a href="/caixa-de-entrada/">Caixa de entrada</a></li>
+                    <li><a href="/configuracoes/">Configurações</a></li>
                 </ul>
             </nav>
         </aside>
@@ -70,7 +72,8 @@
             </div>
 
             <!-- Formulário de cadastro -->
-            <form id="cadastro-form" action="{{ url_for('turma_cadastro_bp.submit_formulario') }}" method="POST" class="form">
+            <form id="cadastro-form" action="/turmas/cadastrar/" method="POST" class="form">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="nome_turma">Nome da Turma</label>
                     <input type="text" id="nome_turma" name="nome_turma" placeholder="Digite o nome da turma" required>
@@ -79,12 +82,12 @@
                     <label for="idprofessor">Escolha o Professor</label>
                     <select id="idprofessor" name="idprofessor" required>
                         {% for professor in professores %}
-                            <option value="{{ professor[0] }}">{{ professor[1] }}</option>
+                            <option value="{{ professor.0 }}">{{ professor.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <button type="submit" class="submit-btn">Cadastrar Turma</button>
-            </form>            
+                <button type="submit" class="submit-btn" onclick="handleFormSubmit(event)">Cadastrar Turma</button>
+            </form>
         </div>
     </div>
 </body>

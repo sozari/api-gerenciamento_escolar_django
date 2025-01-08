@@ -3,7 +3,7 @@
 <head>
     <title>Cadastro de Administradores</title>
     {% load static %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}static/style_formulario.css">
+    <link rel="stylesheet" href="{% static 'style_formulario.css' %}">
     <script>
         async function handleFormSubmit(event) {
             event.preventDefault(); // Impede o comportamento padrão de envio do formulário
@@ -56,7 +56,7 @@
                             <li><a href="/cadastro/turma/">Cadastro de Turmas</a></li>
                         </ul>
                     </li>
-                    <li><a href="/turmas/">Turmas</a></li>
+                    <li><a href="/turma_select/">Turmas</a></li>
                     <li><a href="/caixa-entrada/">Caixa de entrada</a></li>
                     <li><a href="/configuracoes/">Configurações</a></li>
                 </ul>

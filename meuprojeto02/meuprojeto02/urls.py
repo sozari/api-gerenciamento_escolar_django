@@ -34,7 +34,14 @@ urlpatterns = [
     path('login/',views.login,name='login'),
     path('turma_select/',views.turma_select,name='turma_select'),
     path('usuario_list/',views.usuario_list,name='usuario_list'),
-    path('usuario_update/',views.usuario_update,name='usuario_update')
+    path('usuario_update/',views.usuario_update,name='usuario_update'),
+    path('turmas/cadastro/', views.mostrar_formulario_turma, name='mostrar_formulario'),
+    path('turmas/cadastrar/', views.cadastro_formulario_turma, name='submit_formulario'),
+    path('usuario_list', views.listar_usuarios, name='listar_usuarios'),
+    path('usuario_list.html', views.listar_usuarios_html, name='usuario_list_html'),
+    path('usuario_list',views.usuario_list,name='usuario_list')
+    
+
 
 ]
 # if settings.DEBUG:
