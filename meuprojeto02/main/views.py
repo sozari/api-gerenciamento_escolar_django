@@ -20,6 +20,13 @@ from django.http import HttpResponse, JsonResponse  # 'HttpResponse' para respos
 from django.contrib import messages  # Usado para mostrar mensagens de feedback ao usuário, como sucesso ou erro
 
 
+
+
+from django.contrib.auth.hashers import make_password
+import mysql.connector
+
+
+
 from django.http import JsonResponse
 from django.db import connection
 
