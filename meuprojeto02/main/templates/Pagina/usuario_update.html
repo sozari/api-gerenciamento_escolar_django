@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/style_formulario.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style_formulario.css' %}">
     <title>Editar Usuário</title>
     <script>
         function redirecionarParaLista() {
-            window.location.href = "/usuario_list"; // Aqui você coloca a URL da sua página de lista de usuários
+            window.location.href = "/usuario_list";
         }
     </script>
 </head>
@@ -37,24 +38,26 @@
 
         <div class="main-content">
             <h2>Editar Usuário</h2>
-            <form action="/usuario_update/{{ usuario[0] }}" method="POST" onsubmit="event.preventDefault(); this.submit();" class="form">
+            <form action="/usuario_update_action/{{ usuario.idusuario }}/" method="POST">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="name">Nome:</label>
-                    <input type="text" id="name" name="name" value="{{ usuario[1] }}" placeholder="Digite o nome" required>
+                    <input type="text" id="name" name="name" value="{{ usuario.nome }}" placeholder="Digite o nome" required>
                 </div>
-
+            
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="{{ usuario[2] }}" placeholder="Digite o email" required>
+                    <input type="email" id="email" name="email" value="{{ usuario.email }}" placeholder="Digite o email" required>
                 </div>
-
+            
                 <div class="form-group">
                     <label for="password">Senha:</label>
                     <input type="password" id="password" name="password" placeholder="Digite a nova senha">
                 </div>
-
-                <button type="submit" class="submit-btn" onclick="redirecionarParaLista()">Salvar Alterações</button>
+            
+                <button type="submit" class="submit-btn">Salvar Alterações</button>
             </form>
+            
         </div>
     </div>
 </body>

@@ -39,8 +39,20 @@ urlpatterns = [
     path('turmas/cadastrar/', views.cadastro_formulario_turma, name='submit_formulario'),
     path('usuario_list', views.listar_usuarios, name='listar_usuarios'),
     path('usuario_list.html', views.listar_usuarios_html, name='usuario_list_html'),
-    path('usuario_list',views.usuario_list,name='usuario_list')
+    path('usuario_list',views.usuario_list,name='usuario_list'),
+    path("usuario_update/<int:idusuario>/", views.usuario_update_page, name="usuario_update_page"),
+    path("usuario_update_action/<int:idusuario>/", views.usuario_update, name="usuario_update"),
     
+    path('usuario_listagem/', views.usuario_listagem, name='usuario_listagem'),
+    path('usuario_edit/<int:idusuario>/', views.usuario_edit, name='usuario_edit'),
+    path('usuario_delete/<int:idusuario>/', views.usuario_delete, name='usuario_delete'),
+    
+    
+    
+    #path('cadastro/', views.cadastro, name='cadastro'),
+    #path('editarusuario/<int:id>', views.editarusuario, name='editarusuario'),
+     path('excluirusuario/<int:id>/', views.excluirusuario, name='excluirusuario'),
+     
 
 
 ]

@@ -7,69 +7,7 @@
     <link rel="stylesheet" href="{% static 'style_lista.css' %}">
     
     <title>Painel de Usuários</title>
-    <script>
-        async function carregarUsuarios() {
-            try {
-                // Fazendo a requisição AJAX para a rota que pode retornar JSON ou HTML
-                const resposta = await fetch('/usuario_list', { method: 'GET' });
 
-                if (!resposta.ok) throw new Error('Erro ao carregar os usuários');
-                
-                // Verificando se a resposta é JSON (caso da requisição AJAX)
-                const usuarios = await resposta.json();
-
-                // Verificando se a resposta foi JSON (se for, é o caso do AJAX)
-                if (usuarios.length > 0) {
-                    const tabela = document.querySelector('tbody');
-                    tabela.innerHTML = ''; // Limpar a tabela antes de adicionar novos dados
-
-                    // Preencher a tabela com os usuários recebidos
-                    usuarios.forEach(usuario => {
-                        const linha = document.createElement('tr');
-                        linha.innerHTML = `
-                            <td>${usuario.idusuario}</td>
-                            <td>${usuario.nome}</td>
-                            <td>${usuario.email}</td>
-                            <td>${usuario.tipo_usuario}</td>
-                            <td>
-                                <button class="btn" onclick="editarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Editar</button>
-                                <button class="btn btn-delete" onclick="deletarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Excluir</button>
-                            </td>
-                        `;
-                        tabela.appendChild(linha);
-                    });
-                } else {
-                    console.error('Não há usuários para mostrar');
-                }
-
-            } catch (erro) {
-                console.error('Erro ao carregar os usuários:', erro);
-            } 
-        }
-
-        function editarUsuario(idusuario, tipo_usuario) {
-            window.location.href = `/usuario_update/${idusuario}?tipo_usuario=${tipo_usuario}`;
-        }
-
-        async function deletarUsuario(idusuario, tipo_usuario) {
-            const confirmacao = confirm('Tem certeza que deseja excluir este usuário?');
-            if (!confirmacao) return;
-
-            try {
-                const response = await fetch(`/usuario_delete/${idusuario}`, {
-                    method: 'DELETE',
-                });
-                if (!response.ok) throw new Error('Erro ao excluir o usuário');
-                alert('Usuário excluído com sucesso!');
-                carregarUsuarios(); // Recarregar a lista de usuários após a exclusão
-            } catch (erro) {
-                console.error('Erro ao excluir o usuário:', erro);
-                alert('Erro ao excluir o usuário. Verifique o console para mais detalhes.');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', carregarUsuarios); // Carrega os usuários assim que o DOM estiver pronto
-    </script>
 </head>
 <body>
     <div class="container">
@@ -99,16 +37,29 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nome</th>
                         <th>Email</th>
                         <th>Tipo de Usuário</th>
                         <th>Ações</th>
+                        
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.1 }}</td>
+                            <td>{{ usuario.2 }}</td>
+                            <td>{{ usuario.3 }}</td>
+                            
+                            <td>
+                                <a href="/excluirusuario/{{ usuario.0 }}" class="excluir">Excluir</a>
+                                <a href="/editarusuario/{{ usuario.0 }}" class="editar">Editar</a>
+
+                              
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Usuários serão carregados aqui via AJAX -->
-                </tbody>
+                
             </table>
         </div>
     </div>

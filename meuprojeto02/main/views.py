@@ -20,6 +20,11 @@ from django.http import HttpResponse, JsonResponse  # 'HttpResponse' para respos
 from django.contrib import messages  # Usado para mostrar mensagens de feedback ao usuário, como sucesso ou erro
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Usuario
+from .forms import UsuarioForm
+
+
 
 
 from django.contrib.auth.hashers import make_password
@@ -314,3 +319,118 @@ def usuario_list(request):
 
     except Exception as e:
         return JsonResponse({'error': f'Erro ao listar os usuários: {str(e)}'}, status=500)
+
+
+
+
+
+
+
+
+
+
+
+def usuario_update_page(request, idusuario):
+    try:
+        usuario = get_object_or_404(Usuario, idusuario=idusuario)
+        if request.method == "GET":
+            return render(request, "usuario_update.html", {"usuario": usuario})
+    except Exception as e:
+        return JsonResponse({"erro": str(e)}, status=500)
+
+# Atualizar os dados do usuário
+def usuario_update(request, idusuario):
+    if request.method == "POST":
+        nome = request.POST.get("name")
+        email = request.POST.get("email")
+        senha = request.POST.get("password")
+
+        try:
+            usuario = get_object_or_404(Usuario, id=idusuario)
+
+            # Atualizando os dados
+            usuario.nome = nome
+            usuario.email = email
+            if senha:  # Atualizar senha apenas se fornecida
+                usuario.senha = make_password(senha)
+            usuario.save()
+
+            # Redirecionar para a lista de usuários após a atualização
+            return redirect("/usuario_list")
+        except Exception as e:
+            return JsonResponse({"erro": str(e)}, status=500)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+def usuario_listagem(request):
+    usuarios = Usuario.objects.all()  # Recupera todos os usuários
+    return render(request, 'usuario_listagem.html', {'usuarios': usuarios})
+
+
+def usuario_edit(request, idusuario):
+    usuario = get_object_or_404(Usuario, id=idusuario)
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            return redirect('usuario_listagem')  # Redireciona para a lista de usuários
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    return render(request, 'usuario_edit.html', {'form': form, 'usuario': usuario})
+
+
+
+def usuario_delete(request, idusuario):
+    usuario = get_object_or_404(Usuario, id=idusuario)
+    usuario.delete()
+    return redirect('usuario_listagem')  # Redireciona para a lista de usuários
+
+
+
+
+
+
+
+
+
+
+
+
+
+def excluirusuario(request, id):
+    if not request.session.get('usuario_id'):
+        return redirect('usuario_list')  # Direciona para a lista de usuários diretamente
+    else:
+        try:
+            # Estabelecer conexão com o banco de dados
+            bd = conecta_no_banco_de_dados()
+            cursor = bd.cursor()
+
+            # Evitar SQL injection usando parâmetros nomeados
+            sql = 'DELETE FROM usuarios WHERE idusuario = %(user_id)s;'
+            params = {'user_id': id}
+
+            cursor.execute(sql, params)
+            bd.commit()
+            cursor.close()
+
+            messages.success(request, 'Usuário excluído com sucesso!')
+            return redirect('usuario_list')  # Redireciona para a lista de usuários após a exclusão
+
+        except Exception as e:
+            print(f"Erro ao excluir usuário: {e}")
+            messages.error(request, 'Falha ao excluir usuário. Tente novamente mais tarde.')
+            return redirect('usuario_list')  # Redireciona mesmo em caso de erro
+
