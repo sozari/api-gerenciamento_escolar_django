@@ -330,35 +330,8 @@ def usuario_list(request):
 
 
 
-def usuario_update_page(request, idusuario):
-    try:
-        usuario = get_object_or_404(Usuario, idusuario=idusuario)
-        if request.method == "GET":
-            return render(request, "usuario_update.html", {"usuario": usuario})
-    except Exception as e:
-        return JsonResponse({"erro": str(e)}, status=500)
 
-# Atualizar os dados do usuário
-def usuario_update(request, idusuario):
-    if request.method == "POST":
-        nome = request.POST.get("name")
-        email = request.POST.get("email")
-        senha = request.POST.get("password")
 
-        try:
-            usuario = get_object_or_404(Usuario, id=idusuario)
-
-            # Atualizando os dados
-            usuario.nome = nome
-            usuario.email = email
-            if senha:  # Atualizar senha apenas se fornecida
-                usuario.senha = make_password(senha)
-            usuario.save()
-
-            # Redirecionar para a lista de usuários após a atualização
-            return redirect("/usuario_list")
-        except Exception as e:
-            return JsonResponse({"erro": str(e)}, status=500)
         
         
         
@@ -410,27 +383,231 @@ def usuario_delete(request, idusuario):
 
 
 def excluirusuario(request, id):
-    if not request.session.get('usuario_id'):
-        return redirect('usuario_list')  # Direciona para a lista de usuários diretamente
-    else:
+    try:
+        # Estabelecer conexão com o banco de dados
+        bd = conecta_no_banco_de_dados()
+        cursor = bd.cursor()
+
+        # Exclusão de dependências relacionadas ao usuário
+        cursor.execute("DELETE FROM aluno WHERE idusuario = %s", (id,))
+        cursor.execute("DELETE FROM professor WHERE idusuario = %s", (id,))
+
+        # Exclusão do usuário principal
+        cursor.execute("DELETE FROM usuarios WHERE idusuario = %s", (id,))
+        bd.commit()
+
+        if cursor.rowcount == 0:
+            # Caso nenhum registro seja afetado, significa que o ID não foi encontrado
+            messages.error(request, 'Nenhum usuário encontrado com este ID.')
+            return redirect('/usuario_list/')
+
+        messages.success(request, 'Usuário excluído com sucesso!')
+        return redirect('/usuario_list/')
+
+    except Exception as e:
+        print(f"Erro ao excluir usuário: {e}")
+        messages.error(request, 'Falha ao excluir usuário. Tente novamente mais tarde.')
+        return redirect('/usuario_list/')  # Redireciona mesmo em caso de erro
+
+    finally:
+        # Fechando conexão com o banco
+        cursor.close()
+        bd.close()
+
+
+
+
+
+    
+    
+    
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+# View para exibir o formulário de cadastro de professor
+def mostrar_formulario_professor(request):
+    return render(request, 'cadastro_professor.html')
+
+# View para processar os dados do formulário de cadastro de professor
+def submit_formulario_professor(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        # Validando campos obrigatórios
+        if not nome or not email or not senha:
+            messages.error(request, "Todos os campos são obrigatórios!")
+            return redirect('cadastro_professor')  # Redireciona de volta para o formulário
+
+        # Criptografando a senha
+        senha_hash = make_password(senha)
+
+        # Salvando o novo professor
         try:
-            # Estabelecer conexão com o banco de dados
+            Usuario.objects.create(nome=nome, email=email, senha=senha_hash, tipo_usuario='professor')
+            messages.success(request, "Professor cadastrado com sucesso!")
+            return redirect('cadastro_professor')  # Redireciona para o formulário após sucesso
+        except Exception as e:
+            messages.error(request, f"Erro ao processar o cadastro: {str(e)}")
+            return redirect('cadastro_professor')  # Redireciona para o formulário em caso de erro
+        
+        
+        
+        
+        
+        # Cadastro de Administrador
+def mostrar_formulario_adm(request):
+    return render(request, 'cadastro_adm.html')
+
+def submit_formulario_adm(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        # Validando campos obrigatórios
+        if not nome or not email or not senha:
+            messages.error(request, "Todos os campos são obrigatórios!")
+            return redirect('cadastro_adm')  # Redireciona de volta para o formulário
+
+        # Criptografando a senha
+        senha_hash = make_password(senha)
+
+        # Salvando o novo administrador
+        try:
+            Usuario.objects.create(nome=nome, email=email, senha=senha_hash, tipo_usuario='administrador')
+            messages.success(request, "Administrador cadastrado com sucesso!")
+            return redirect('cadastro_adm')  # Redireciona para o formulário após sucesso
+        except Exception as e:
+            messages.error(request, f"Erro ao processar o cadastro: {str(e)}")
+            return redirect('cadastro_adm')  # Redireciona para o formulário em caso de erro
+        
+        
+        
+        # Cadastro de Aluno
+def mostrar_formulario_aluno(request):
+    return render(request, 'cadastro_aluno.html')
+
+def submit_formulario_aluno(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        # Validando campos obrigatórios
+        if not nome or not email or not senha:
+            messages.error(request, "Todos os campos são obrigatórios!")
+            return redirect('cadastro_aluno')  # Redireciona de volta para o formulário
+
+        # Criptografando a senha
+        senha_hash = make_password(senha)
+
+        # Salvando o novo aluno
+        try:
+            Usuario.objects.create(nome=nome, email=email, senha=senha_hash, tipo_usuario='aluno')
+            messages.success(request, "Aluno cadastrado com sucesso!")
+            return redirect('cadastro_aluno')  # Redireciona para o formulário após sucesso
+        except Exception as e:
+            messages.error(request, f"Erro ao processar o cadastro: {str(e)}")
+            return redirect('cadastro_aluno')  # Redireciona para o formulário em caso de erro
+        
+        
+        
+        
+def cadastro_admnistrador(request):
+    #if not request.session.get('usuario_id'):
+     #   return redirect('/')
+    #else:
+        if request.method == 'POST':
+            nome = request.POST.get('nome')
+            email = request.POST.get('email')
+            senha = request.POST.get('senha')
+
+            # Valide a entrada (assumindo lógica de validação)
+            if not all([nome, email, senha]):
+                # Lide com erros de validação (por exemplo, exiba mensagens de erro)
+                return render(request, '/cadastro_adm.html/')
+
+            # Criptografando a senha
+            senha_hash = make_password(senha)
+
+            # Atualize os dados do usuário se a validação for aprovada
             bd = conecta_no_banco_de_dados()
             cursor = bd.cursor()
-
-            # Evitar SQL injection usando parâmetros nomeados
-            sql = 'DELETE FROM usuarios WHERE idusuario = %(user_id)s;'
-            params = {'user_id': id}
-
-            cursor.execute(sql, params)
-            bd.commit()
+            sql = (
+                """
+                INSERT INTO usuarios
+                SET nome = %s, email = %s, senha = %s, tipo_usuario = %s;
+                """
+            )
+            values = (nome, email, senha_hash, 'administrador')
+            cursor.execute(sql, values)
+            bd.commit()  
             cursor.close()
+            bd.close()
 
-            messages.success(request, 'Usuário excluído com sucesso!')
-            return redirect('usuario_list')  # Redireciona para a lista de usuários após a exclusão
+            # Redirecione para a página de sucesso ou exiba a mensagem de confirmação
+            messages.success(request, "Administrador cadastrado com sucesso!")
+            return redirect('cadastro_adm')  # Aqui o nome da URL
 
-        except Exception as e:
-            print(f"Erro ao excluir usuário: {e}")
-            messages.error(request, 'Falha ao excluir usuário. Tente novamente mais tarde.')
-            return redirect('usuario_list')  # Redireciona mesmo em caso de erro
+        # Exiba o formulário (caso não seja POST)
+        return render(request, '/cadastro_adm.html/')
+    
+    
+    
+    
+    
+    
+def usuario_update(request,id):
+    id_usuario = id
+    bd = conecta_no_banco_de_dados()
+    cursor = bd.cursor()
+    cursor.execute("""
+        SELECT idusuario, nome, email
+        FROM usuarios
+        WHERE idusuario = %s;
+    """, (id,))
+    dados_usuario = cursor.fetchone()
+    cursor.close()
+    bd.close()
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')    
+        if not all([nome, email, senha]):
+            return render(request, 'usuario_list.html')
+        bd = conecta_no_banco_de_dados()
+        cursor = bd.cursor()
+        sql = (
+            """
+            UPDATE usuarios
+            SET nome = %s, email = %s, senha = %s
+            WHERE idusuario = %s;
+            """
+        )
+        values = (nome, email, senha, id)
+        cursor.execute(sql, values)
+        bd.commit()  # Assumindo que você tenha gerenciamento de transações
+        cursor.close()
+        bd.close()
 
+    #     # Redirecione para a página de sucesso ou exiba a mensagem de confirmação
+        return redirect('usuario_list/')     
+
+    # # Exiba o formulário (assumindo lógica de renderização)
+    return render(request, 'Pagina/usuario_update.html',{'id': id_usuario})

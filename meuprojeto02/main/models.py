@@ -9,6 +9,9 @@ class Usuario(models.Model):
     email = models.EmailField(unique=True)
     senha = models.CharField(max_length=255)
     tipo_usuario = models.CharField(max_length=50)  # Ex.: 'admin', 'professor', 'aluno'
+    
+    class Meta:
+        db_table = 'usuarios'  # Nome da tabela no banco de dados
 
     def __str__(self):
         return self.nome

@@ -34,24 +34,48 @@ urlpatterns = [
     path('login/',views.login,name='login'),
     path('turma_select/',views.turma_select,name='turma_select'),
     path('usuario_list/',views.usuario_list,name='usuario_list'),
-    path('usuario_update/',views.usuario_update,name='usuario_update'),
+
     path('turmas/cadastro/', views.mostrar_formulario_turma, name='mostrar_formulario'),
     path('turmas/cadastrar/', views.cadastro_formulario_turma, name='submit_formulario'),
     path('usuario_list', views.listar_usuarios, name='listar_usuarios'),
     path('usuario_list.html', views.listar_usuarios_html, name='usuario_list_html'),
     path('usuario_list',views.usuario_list,name='usuario_list'),
-    path("usuario_update/<int:idusuario>/", views.usuario_update_page, name="usuario_update_page"),
-    path("usuario_update_action/<int:idusuario>/", views.usuario_update, name="usuario_update"),
+  
     
     path('usuario_listagem/', views.usuario_listagem, name='usuario_listagem'),
     path('usuario_edit/<int:idusuario>/', views.usuario_edit, name='usuario_edit'),
-    path('usuario_delete/<int:idusuario>/', views.usuario_delete, name='usuario_delete'),
+    # path('usuario_delete/<int:idusuario>/', views.usuario_delete, name='usuario_delete'),
     
     
     
     #path('cadastro/', views.cadastro, name='cadastro'),
     #path('editarusuario/<int:id>', views.editarusuario, name='editarusuario'),
-     path('excluirusuario/<int:id>/', views.excluirusuario, name='excluirusuario'),
+    path('excluirusuario/<int:id>/', views.excluirusuario, name='excluirusuario'),
+
+    
+    
+    
+    
+    path('usuario_update/<int:idusuario>/', views.usuario_update, name='usuario_update'),
+    
+    
+    path('cadastro/professor/', views.mostrar_formulario_professor, name='cadastro_professor'),  # Rota para exibir o formulário
+    path('cadastro/professor/', views.submit_formulario_professor, name='submit_cadastro_professor'),  # Rota para processar o formulário
+    
+    
+    # Rota para exibir e processar o formulário de cadastro de administrador
+    path('cadastro_adm/', views.mostrar_formulario_adm, name='cadastro_adm'),
+    path('cadastro_adm/', views.submit_formulario_adm, name='submit_cadastro_adm'),
+
+    # Rota para exibir e processar o formulário de cadastro de aluno
+    path('cadastro/aluno/', views.mostrar_formulario_aluno, name='cadastro_aluno'),
+    path('cadastro/aluno/', views.submit_formulario_aluno, name='submit_cadastro_aluno'),
+    
+    path('cadastro_admnistrador/', views.cadastro_admnistrador, name='cadastro_admnistrador'),
+    
+
+    
+    
      
 
 

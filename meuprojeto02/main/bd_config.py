@@ -8,7 +8,7 @@ def conecta_no_banco_de_dados():
     cursor = cnx.cursor()
 
     # Verificar se o banco de dados 'aula06' existe
-    cursor.execute('SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = "aula06";')
+    cursor.execute('SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = "gerenciamento_escolar";')
     num_results = cursor.fetchone()[0]
 
     # Fechar a conexão inicial
@@ -28,7 +28,7 @@ def conecta_no_banco_de_dados():
             host='127.0.0.1',
             user='root',
             password='',
-            database='aula06'  # Especificar o banco de dados
+            database='gerenciamento_escolar'  # Especificar o banco de dados
         )
 
         cursor = cnx.cursor()
@@ -85,7 +85,7 @@ def conecta_no_banco_de_dados():
             host='127.0.0.1',
             user='root',
             password='',
-            database='aula06'
+            database='gerenciamento_escolar'
         )
     except mysql.connector.Error as err:
         print("Erro de conexão com o banco de dados:", err)
