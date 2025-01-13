@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <title>Cadastro de Alunos</title>
-    <link rel="stylesheet" href="../static/css/style_formulario.css">
+    <link rel="stylesheet" href="{% static 'style_formulario.css' %}">
     <script>
         async function handleFormSubmit(event) {
             event.preventDefault();
-
             const form = document.getElementById('cadastro-form');
             const formData = new FormData(form);
-
             try {
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: formData,
                 });
-
                 if (response.ok) {
                     showSuccessMessage();
                     form.reset();
@@ -27,7 +25,6 @@
                 alert("Erro ao cadastrar aluno. Tente novamente.");
             }
         }
-
         function showSuccessMessage() {
             const successMessage = document.getElementById('success-message');
             successMessage.style.display = 'block';
@@ -44,14 +41,13 @@
             <nav class="menu">
                 <ul>
                     <li><a href="/">Início</a></li>
-                    <li><a href="/usuario_list">Tabela de Usuários</a></li>
+                    <li><a href="/usuarios/">Tabela de Usuários</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="/adm_cadastro">Cadastro de Administradores</a></li>
-                            <li><a href="/aluno_cadastro">Cadastro de Alunos</a></li>
-                            <li><a href="/professor_cadastro">Cadastro de Professores</a></li>
-                            <li><a href="/turma_cadastro">Cadastro de Turmas</a></li>
+                            <li><a href="/cadastro/adm/">Cadastro de Administradores</a></li>
+                            <li><a href="/cadastro/professor/">Cadastro de Professores</a></li>
+                            <li><a href="/cadastro/turma/">Cadastro de Turmas</a></li>
                         </ul>
                     </li>
                     <li><a href="/turma_select/">Turmas</a></li>
@@ -63,12 +59,11 @@
 
         <div class="main-content">
             <h2>Cadastro de Alunos</h2>
-
             <div id="success-message" style="display: none; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                 Aluno cadastrado com sucesso!
             </div>
-
-            <form id="cadastro-form" action="/aluno_cadastro" method="POST" class="form" onsubmit="handleFormSubmit(event)">
+            <form id="cadastro-form" action="{% url 'cadastro_aluno' %}" method="POST" class="form" onsubmit="handleFormSubmit(event)">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="nome">Nome</label>
                     <input type="text" id="nome" name="nome" placeholder="Digite o nome completo" required>
@@ -90,11 +85,10 @@
                     <select name="idturma" id="idturma" required>
                         <option value="" disabled selected>Escolha uma turma</option>
                         {% for turma in turmas %}
-                            <option value="{{ turma[0] }}">{{ turma[1] }}</option>
+                            <option value="{{ turma.0 }}">{{ turma.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                
                 <button type="submit" class="submit-btn">Cadastrar Aluno</button>
             </form>
         </div>

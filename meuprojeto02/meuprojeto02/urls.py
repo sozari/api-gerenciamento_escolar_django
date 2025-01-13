@@ -59,6 +59,7 @@ urlpatterns = [
     path('usuario_update/<int:idusuario>/', views.usuario_update, name='usuario_update'),
     
     
+    
     path('cadastro/professor/', views.mostrar_formulario_professor, name='cadastro_professor'),  # Rota para exibir o formulário
     path('cadastro/professor/', views.submit_formulario_professor, name='submit_cadastro_professor'),  # Rota para processar o formulário
     
@@ -72,6 +73,14 @@ urlpatterns = [
     path('cadastro/aluno/', views.submit_formulario_aluno, name='submit_cadastro_aluno'),
     
     path('cadastro_admnistrador/', views.cadastro_admnistrador, name='cadastro_admnistrador'),
+
+
+    path('usuario_update/<int:idusuario>/', views.usuario_update, name='usuario_update'),
+    path('usuario_list/', views.usuario_list, name='usuario_list'),  # Certifique-se que essa URL esteja aqui 
+
+
+    path('cadastro_aluno/', views.cadastro_aluno, name='cadastro_aluno'),
+    
     
 
     

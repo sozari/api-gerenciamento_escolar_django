@@ -573,41 +573,87 @@ def cadastro_admnistrador(request):
     
     
     
-def usuario_update(request,id):
-    id_usuario = id
-    bd = conecta_no_banco_de_dados()
-    cursor = bd.cursor()
-    cursor.execute("""
-        SELECT idusuario, nome, email
-        FROM usuarios
-        WHERE idusuario = %s;
-    """, (id,))
-    dados_usuario = cursor.fetchone()
-    cursor.close()
-    bd.close()
+
+
+
+
+
+def usuario_update(request, idusuario):
+    if request.method == "GET":
+        # Consultar o usuário pelo ID
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM usuarios WHERE idusuario = %s", [idusuario])
+            usuario = cursor.fetchone()
+
+        if usuario:
+            return render(request, 'Pagina/usuario_update.html', {'usuario': usuario})
+        else:
+            return redirect('usuario_list')
+
+    elif request.method == "POST":
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        # Atualizar o usuário no banco de dados
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE usuarios SET nome = %s, email = %s, senha = %s WHERE idusuario = %s",
+                [nome, email, senha, idusuario]  # Usando idusuario para atualizar corretamente
+            )
+
+        return redirect('usuario_list')
+
+
+
+
+def cadastro_aluno(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
         email = request.POST.get('email')
-        senha = request.POST.get('senha')    
-        if not all([nome, email, senha]):
-            return render(request, 'usuario_list.html')
-        bd = conecta_no_banco_de_dados()
-        cursor = bd.cursor()
-        sql = (
-            """
-            UPDATE usuarios
-            SET nome = %s, email = %s, senha = %s
-            WHERE idusuario = %s;
-            """
-        )
-        values = (nome, email, senha, id)
-        cursor.execute(sql, values)
-        bd.commit()  # Assumindo que você tenha gerenciamento de transações
-        cursor.close()
-        bd.close()
+        senha = request.POST.get('senha')
+        telefone_responsavel = request.POST.get('telefone_responsavel')
+        idturma = request.POST.get('idturma')
 
-    #     # Redirecione para a página de sucesso ou exiba a mensagem de confirmação
-        return redirect('usuario_list/')     
+        if not all([nome, email, senha, telefone_responsavel, idturma]):
+            messages.error(request, 'Todos os campos são obrigatórios.')
+            return redirect('cadastro_aluno')
 
-    # # Exiba o formulário (assumindo lógica de renderização)
-    return render(request, 'Pagina/usuario_update.html',{'id': id_usuario})
+        senha_hash = make_password(senha)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO usuarios (nome, email, senha, tipo_usuario)
+                VALUES (%s, %s, %s, %s)
+                """,
+                [nome, email, senha_hash, 'aluno']
+            )
+            idusuario = cursor.lastrowid
+            cursor.execute(
+                """
+                INSERT INTO aluno (idusuario, telefone_responsavel, idturma)
+                VALUES (%s, %s, %s)
+                """,
+                [idusuario, telefone_responsavel, idturma]
+            )
+            cursor.execute(
+                """
+                INSERT INTO notas (idusuario, idturma)
+                VALUES (%s, %s)
+                """,
+                [idusuario, idturma]
+            )
+            connection.commit()
+
+        messages.success(request, 'Aluno cadastrado com sucesso!')
+        return redirect('cadastro_aluno')
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT idturma, nome_turma FROM turmas")
+        turmas = cursor.fetchall()
+
+    return render(request, 'Pagina/cadastro_aluno.html', {'turmas': turmas})
+
+
+
