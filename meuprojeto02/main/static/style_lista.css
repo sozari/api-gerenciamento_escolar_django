@@ -92,8 +92,22 @@ table tr:hover {
     background-color: #e0e0e0;
 }
 
-/* Botões */
-.btn {
+/* Botões Específicos */
+.excluir {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    background-color: #DC3545;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.excluir:hover {
+    background-color: #a71d2a;
+}
+
+.editar {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -103,16 +117,8 @@ table tr:hover {
     font-size: 14px;
 }
 
-.btn:hover {
+.editar:hover {
     background-color: #0056b3;
-}
-
-.btn-delete {
-    background-color: #DC3545;
-}
-
-.btn-delete:hover {
-    background-color: #a71d2a;
 }
 
 /* Formulário de Edição */
@@ -151,10 +157,6 @@ form button {
 form button:hover {
     background-color: #45a049;
 }
-
-
-
-
 
 /* Estilo da barra lateral */
 .sidebar {
@@ -207,6 +209,7 @@ form button:hover {
 .sidebar .menu li:hover .submenu {
     display: block;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -222,10 +225,6 @@ th {
     background-color: #4CAF50;
     color: white;
 }
-
-
-
-
 
 .content {
     margin-left: 250px; /* Ajuste conforme necessário para o layout */
